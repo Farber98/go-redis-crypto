@@ -2,14 +2,15 @@ package main
 
 import (
 	"go-redis-crypto/internal/handlers"
+	"go-redis-crypto/internal/infraestructure"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
-func initRouter() *echo.Echo {
+func initRouter(redis *infraestructure.Redis) *echo.Echo {
 	r := echo.New()
-	initRoutes(r)
+	initRoutes(r, redis)
 
 	/* MIDDLEWARES */
 	r.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -19,8 +20,11 @@ func initRouter() *echo.Echo {
 	return r
 }
 
-func initRoutes(r *echo.Echo) {
-	r.GET("/test", handlers.Test)
-	r.GET("/cryptop10", handlers.Top10)
-	r.GET("/fiat-cur-price/:id", handlers.FiatCurPrice)
+func initRoutes(r *echo.Echo, redis *infraestructure.Redis) {
+
+	cryptoHandler := &handlers.CryptoHandler{Redis: redis}
+	r.GET("/test", cryptoHandler.Test)
+	r.GET("/cryptop10", cryptoHandler.Top10)
+	r.GET("/fiat-cur-price/:id", cryptoHandler.FiatCurPrice)
+	r.GET("/trending24h", cryptoHandler.Trending24h)
 }
