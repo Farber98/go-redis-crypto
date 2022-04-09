@@ -9,4 +9,4 @@ Using Redis to reduce the amount of fetches done to Coingecko API.
 $ docker-compose up --build
 ```
 ### 3. Compare API FETCH vs CACHE HIT
-![CacheVsFetch](https://github.com/farber98/go-redis-crypto/img/cachevsfetch.png)
+![cachevsfetch](https://github.com/Farber98/go-redis-crypto/tree/master/img/cachevsfetch.png)
