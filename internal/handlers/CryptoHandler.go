@@ -1,32 +1,29 @@
 package handlers
 
 import (
-	"encoding/json"
-	"go-redis-crypto/internal/helpers"
 	"go-redis-crypto/internal/infraestructure"
-	"go-redis-crypto/internal/structs"
+	"go-redis-crypto/internal/services"
 	"net/http"
 
 	"github.com/labstack/echo"
 )
 
 type CryptoHandler struct {
-	Redis *infraestructure.Redis
+	Redis         *infraestructure.Redis
+	CryptoService *services.CryptoService
 }
 
 func (ch *CryptoHandler) Top10(c echo.Context) error {
-	url := "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false"
-	responseByte := helpers.GetData(url)
-	crypto := &structs.Cryptop10{}
-	err := json.Unmarshal(responseByte, &crypto)
+	crypto, err := ch.CryptoService.Top10()
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, struct{ Msg string }{"Unable to unmarshall response."})
+		return c.JSON(http.StatusUnprocessableEntity, struct{ Msg string }{"ERR: " + err.Error()})
 	}
 	return c.JSON(http.StatusOK, crypto)
 }
 
-func (ch *CryptoHandler) FiatCurPrice(c echo.Context) error {
+/* func (ch *CryptoHandler) FiatCurPrice(c echo.Context) error {
 	id := c.Param("id")
+
 	url := "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
 	responseByte := helpers.GetData(url)
 	crypto := &structs.FiatCurPrice{}
@@ -50,7 +47,7 @@ func (ch *CryptoHandler) Trending24h(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, crypto)
 }
-
+*/
 func (ch *CryptoHandler) Test(c echo.Context) error {
 	return c.JSON(http.StatusOK, struct{ Msg string }{"API LIVE!"})
 }
