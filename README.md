@@ -1,9 +1,12 @@
 # go-redis-crypto
 
-Playing with Redis to reduce the amount of fetches done to Coingecko API.
+Using Redis to reduce the amount of fetches done to Coingecko API.
 
-### 1. Run Redis with Docker
+## How to play:
+### 1. Clone
+### 2. Run
 ```
-$ docker pull redis
-$ docker run --name redis-instance -p 6379:6379 -d redis
+$ docker-compose up --build
 ```
+### 3. Compare API FETCH vs CACHE HIT
+![CacheVsFetch](https://github.com/farber98/go-redis-crypto/img/cachevsfetch.png)
