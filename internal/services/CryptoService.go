@@ -51,7 +51,7 @@ func (cs *CryptoService) Top10() (crytop10 *structs.Cryptop10, err error) {
 
 func (cs *CryptoService) FiatCurPrice(id string) (crytop10 *structs.FiatCurPrice, err error) {
 	crypto := &structs.FiatCurPrice{}
-	val, err := cs.RedisConn.Get(context.Background(), "FiatCurPrice-"+id).Result()
+	val, err := cs.RedisConn.Get(context.Background(), "fiatcurprice-"+id).Result()
 	if err == redis.Nil {
 		/* Non cached, API FETCH */
 		url := "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
@@ -67,7 +67,40 @@ func (cs *CryptoService) FiatCurPrice(id string) (crytop10 *structs.FiatCurPrice
 		}
 		/* Encode to string */
 		val := string(b)
-		_, err = cs.RedisConn.Set(context.Background(), "FiatCurPrice-"+id, val, 30*time.Second).Result()
+		_, err = cs.RedisConn.Set(context.Background(), "fiatcurprice-"+id, val, 30*time.Second).Result()
+		log.Println("API FETCH")
+		return crypto, err
+	} else if err != nil {
+		return nil, err
+	} else {
+		/* Cached, CACHE HIT */
+		err = json.Unmarshal([]byte(val), &crypto)
+		if err != nil {
+			return nil, err
+		}
+		log.Println("CACHE HIT")
+	}
+	return crypto, nil
+}
+func (cs *CryptoService) Trending24h() (crytop10 *structs.Trending24h, err error) {
+	crypto := &structs.Trending24h{}
+	val, err := cs.RedisConn.Get(context.Background(), "trending24h").Result()
+	if err == redis.Nil {
+		/* Non cached, API FETCH */
+		url := "https://api.coingecko.com/api/v3/search/trending"
+		responseByte := helpers.GetData(url)
+		err := json.Unmarshal(responseByte, &crypto)
+		if err != nil {
+			return nil, err
+		}
+		/* Marshalling API FETCH, encoded */
+		b, err := json.Marshal(crypto)
+		if err != nil {
+			return nil, err
+		}
+		/* Encode to string */
+		val := string(b)
+		_, err = cs.RedisConn.Set(context.Background(), "trending24h", val, 30*time.Second).Result()
 		log.Println("API FETCH")
 		return crypto, err
 	} else if err != nil {

@@ -27,5 +27,5 @@ func initRoutes(r *echo.Echo, redis *infraestructure.Redis, cryptoService *servi
 	r.GET("/test", cryptoHandler.Test)
 	r.GET("/cryptop10", cryptoHandler.Top10)
 	r.GET("/fiat-cur-price/:id", cryptoHandler.FiatCurPrice)
-	//r.GET("/trending24h", cryptoHandler.Trending24h)
+	r.GET("/trending24h", cryptoHandler.Trending24h)
 }
