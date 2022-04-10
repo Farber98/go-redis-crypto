@@ -1,6 +1,6 @@
 # go-redis-crypto
 
-Using Redis to reduce the amount of fetches done to Coingecko API.
+Using Redis as Cache to reduce the amount of fetches done to Coingecko API and response times.
 
 ## How to play:
 #### 1. Clone repo
