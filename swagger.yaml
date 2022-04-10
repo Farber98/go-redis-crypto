@@ -1,0 +1,237 @@
+openapi: 3.0.0
+servers: 
+- url: http://localhost:1525
+info: 
+  version: 0.0.1 
+  title: go-redis-crypto swagger documentation 
+paths: 
+  /test:
+    get: 
+      tags: 
+        - Test
+      summary: Test method to check API.
+      responses: 
+        '200': 
+          description: success 
+          content: 
+            application/json: 
+              example:
+                Msg: "API Live!"
+
+  /cryptop10:
+    get: 
+      tags: 
+        - Crypto
+      summary: Returns last 30s top10 cryptos with some attributes.
+      responses:
+        '200': 
+          description: Returns last 30s top10 cryptos with some attributes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    market_cap_rank:
+                      description: MarketCap rank.
+                      type: integer
+                      example: 1
+                    id: 
+                      description: Coingecko ID for a crypto.
+                      type: string 
+                      example: bitcoin
+                    symbol:
+                      description: Crypto's symbol.
+                      type: string
+                      example: btc
+                    name: 
+                      description: Crypto's name.
+                      type: string 
+                      example: Bitcoin
+                    current_price:
+                      description: Price of the last 30s.
+                      type:  number
+                      example: 42880
+                    high_24h: 
+                      description: Highest price of the last 24h.
+                      type: number 
+                      example: 43420
+                    low_24h: 
+                      description: Lowest price of the last 24h.
+                      type: number 
+                      example: 42528
+                    circulating_supply: 
+                      description: Actual circulating supply.
+                      type: integer 
+                      example: 19008232
+                    total_supply: 
+                      description: Total supply.
+                      type: integer 
+                      example: 21000000
+                    ath: 
+                      description: All time high.
+                      type: number 
+                      example: 69045
+                    ath_date: 
+                      description: All time high date.
+                      type: string 
+                      example: 2021-11-10T14:24:11.849Z
+                    atl: 
+                      description: All time low.
+                      type: number 
+                      example: 67.81
+                    atl_date: 
+                      description: All time low date.
+                      type: string 
+                      example: 2013-07-06T00:00:00Z
+                    last_updated: 
+                      description: Last updated date.
+                      type: string 
+                      example: 2022-04-10T22:01:49.881Z
+  /fiat-cur-price/{id}:
+    get: 
+      tags: 
+        - Crypto
+      summary: Returns last 30s fiat current price of given crypto.
+      parameters:
+        - in: path
+          name: id
+          description: Coingecko's ID of crypto.
+          required: true
+          example: bitcoin
+          schema:
+            type: string
+      responses:
+        '200': 
+          description: Returns last 30s fiat current price of given crypto.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      description: Coingecko ID for a crypto.
+                      type: string 
+                      example: bitcoin
+                    symbol:
+                      description: Crypto's symbol.
+                      type: string
+                      example: btc
+                    name: 
+                      description: Crypto's name.
+                      type: string 
+                      example: Bitcoin
+                    market_data:
+                      type: object
+                      properties:
+                        current_price:
+                          type: object
+                          properties:
+                            aud:
+                              description: Price of the last 30s in aud.
+                              type:  number
+                              example: 57153
+                            cad:
+                              description: Price of the last 30s in cad.
+                              type:  number
+                              example: 53616
+                            chf:
+                              description: Price of the last 30s in chf.
+                              type:  number
+                              example: 39803
+                            cny:
+                              description: Price of the last 30s in cny.
+                              type:  number
+                              example: 271450
+                            eur:
+                              description: Price of the last 30s in eur.
+                              type:  number
+                              example: 39119
+                            gbp:
+                              description: Price of the last 30s in gbp.
+                              type:  number
+                              example: 32709
+                            hkd:
+                              description: Price of the last 30s in hkd.
+                              type:  number
+                              example: 334317
+                            jpy:
+                              description: Price of the last 30s in jpy.
+                              type:  number
+                              example: 5302515
+                            nzd:
+                              description: Price of the last 30s in nzd.
+                              type:  number
+                              example: 62286
+                            usd:
+                              description: Price of the last 30s in usd.
+                              type:  number
+                              example: 42647
+                            sats:
+                              description: Price of the last 30s in sats.
+                              type:  number
+                              example: 100018080
+        '202':
+          description: given crypto id doesn't exists yet.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Msg:
+                    description: error message
+                    type: string
+                    example: Given crypto doesn't exist... yet
+
+  /trending24h:
+    get: 
+      tags: 
+        - Crypto
+      summary: Returns 7 most trending cryptos of last 24hs.
+      responses:
+        '200': 
+          description: Returns 7 most trending cryptos of last 24hs.
+          content:
+            application/json:
+              schema:
+                properties:
+                  coins:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        item:
+                          type: object
+                          properties:
+                            id: 
+                              description: Coingecko ID for a crypto.
+                              type: string 
+                              example: oraichain-token
+                            coin_id: 
+                              description: Coingecko coin_id for a crypto.
+                              type: integer 
+                              example: 12931
+                            name: 
+                              description: Crypto's name.
+                              type: string 
+                              example: Oraichain Token
+                            symbol:
+                              description: Crypto's symbol.
+                              type: string
+                              example: ORAI
+                            market_cap_rank:
+                              description: MarketCap rank.
+                              type: integer
+                              example: 853
+                            price_btc:
+                              description: Price of the last 30s in BTC.
+                              type:  number
+                              example: 0.0002382649427630326
+                            score:
+                              description: Crypto's trending score.
+                              type:  number
+                              example: 0
+    

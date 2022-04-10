@@ -27,7 +27,7 @@ func (ch *CryptoHandler) FiatCurPrice(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, struct{ Msg string }{"ERR: " + err.Error()})
 	}
 	if crypto.ID == "" {
-		return c.JSON(http.StatusOK, struct{ Msg string }{"Given crypto doesn't exist... yet"})
+		return c.JSON(http.StatusAccepted, struct{ Msg string }{"Given crypto doesn't exist... yet"})
 	}
 	return c.JSON(http.StatusOK, crypto)
 }
